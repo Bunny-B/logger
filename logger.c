@@ -36,6 +36,7 @@ void RSE_InitLoggerH(void* hLoggerFile) {
 #endif // _DEBUG
 	}
 	else {
+		
 #ifdef _DEBUG
 		printf("Log file created successfully \n");
 #endif // _DEBUG
