@@ -9,7 +9,6 @@
 extern "C" {
 #endif
 
-
 	void RSE_InitLoggerA(const char* logPath);
 	#define InitLogger RSE_InitLoggerA
 
