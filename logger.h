@@ -3,28 +3,34 @@
 
 /*
 	Safe Thread Logger
+	https://github.com/Bunny-B/logger
 */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-	void RSE_InitLoggerA(const char* logPath);
+	extern void RSE_InitLoggerA(const char* logPath, void* taskFinishedEvent);
 	#define InitLogger RSE_InitLoggerA
 
-	void RSE_InitLoggerH(void* hLoggerFile);
+	extern void RSE_InitLoggerH(void* hLoggerFile, void* taskFinishedEvent);
 	#define InitLoggerH RSE_InitLoggerH
 
-	void RSE_Log(const char* format, ...);
+	extern void* RSE_CreateEvent();
+
+	extern void RSE_WaitForLogger(void* taskFinishedEvent);
+	#define WaitForLogger RSE_WaitForLogger
+
+	extern void RSE_Log(const char* format, ...);
 	#define Log RSE_Log
 
-	void RSE_WLog(void* format, ...);
+	extern void RSE_WLog(void* format, ...);
 	#define WLog RSE_WLog
 
-	void RSE_ErrorLog(const char* format, ...);
+	extern void RSE_ErrorLog(const char* format, ...);
 	#define ErrorLog RSE_ErrorLog
 
-	void RSE_CloseLogger();
+	extern void RSE_CloseLogger();
 	#define CloseLogger RSE_ErrorLog
 
 #ifdef __cplusplus

@@ -7,13 +7,17 @@ HANDLE RSE_hLoggerFile = INVALID_HANDLE_VALUE;
 HANDLE  hConsole;
 CRITICAL_SECTION logCriticalSection;  // Critical section for thread safety
 
-static void PushConsoleColor(WORD color) {
-	SetConsoleTextAttribute(hConsole, color);
+HANDLE taskFinishedEvent = NULL; // Event to signal task completion
+
+
+void* RSE_CreateEvent() {
+	return  CreateEvent(NULL, FALSE, FALSE, NULL);
+}
+void RSE_WaitForLogger(void* taskFinishedEvent) {
+	WaitForSingleObject((HANDLE)taskFinishedEvent, INFINITE);
+	CloseHandle((HANDLE)taskFinishedEvent);
 }
 
-static void PopConsoleColor() {
-	SetConsoleTextAttribute(hConsole, 7);
-}
 
 static void InternalLog(const char* format, va_list args) {
 	char logMessage[1024];
@@ -29,16 +33,14 @@ static void InternalLog(const char* format, va_list args) {
 	}
 }
 
-void RSE_InitLoggerH(void* hLoggerFile) {
+void RSE_InitLoggerH(void* hLoggerFile, void* taskFinishedEvent) {
 	InitializeCriticalSection(&logCriticalSection);
-	
 	if (hLoggerFile == INVALID_HANDLE_VALUE) {
 #ifdef _DEBUG
 		printf("Failed to create log file\n");
 #endif // _DEBUG
 	}
 	else {
-		
 #ifdef _DEBUG
 		printf("Log file created successfully \n");
 #endif // _DEBUG
@@ -64,11 +66,13 @@ void RSE_InitLoggerH(void* hLoggerFile) {
 		}
 
 	}
+	if (taskFinishedEvent != NULL)
+		SetEvent(taskFinishedEvent);
 }
 
-void RSE_InitLoggerA(const char* logPath) {
+void RSE_InitLoggerA(const char* logPath, void* taskFinishedEvent) {
 	RSE_hLoggerFile = CreateFileA(logPath, GENERIC_WRITE, FILE_SHARE_WRITE, 0, CREATE_ALWAYS, 0, 0);
-	RSE_InitLoggerH(RSE_hLoggerFile);
+	RSE_InitLoggerH(RSE_hLoggerFile, taskFinishedEvent);
 }
 
 
