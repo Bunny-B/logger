@@ -10,13 +10,14 @@
 extern "C" {
 #endif
 
+	extern const char* RSE_CurrentDir(const char* filename);
+	extern void* RSE_CreateEvent();
+
 	extern void RSE_InitLoggerA(const char* logPath, void* taskFinishedEvent);
 	#define InitLogger RSE_InitLoggerA
 
 	extern void RSE_InitLoggerH(void* hLoggerFile, void* taskFinishedEvent);
 	#define InitLoggerH RSE_InitLoggerH
-
-	extern void* RSE_CreateEvent();
 
 	extern void RSE_WaitForLogger(void* taskFinishedEvent);
 	#define WaitForLogger RSE_WaitForLogger

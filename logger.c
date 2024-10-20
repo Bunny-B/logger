@@ -33,6 +33,19 @@ static void InternalLog(const char* format, va_list args) {
 	}
 }
 
+const char* RSE_CurrentDir(const char* filename) {
+	static char logFilePath[MAX_PATH]; // Buffer for the log file path
+	char currentDirectory[MAX_PATH];
+
+	DWORD result = GetCurrentDirectoryA(MAX_PATH, currentDirectory);
+	if (result) {
+		snprintf(logFilePath, sizeof(logFilePath), "%s\\%s", currentDirectory, filename);
+		return logFilePath;
+	}
+	return NULL; 
+}
+
+
 void RSE_InitLoggerH(void* hLoggerFile, void* taskFinishedEvent) {
 	InitializeCriticalSection(&logCriticalSection);
 	if (hLoggerFile == INVALID_HANDLE_VALUE) {
