@@ -30,6 +30,8 @@ static void InternalLog(const char* format, va_list args) {
 }
 
 void RSE_InitLoggerH(void* hLoggerFile) {
+	InitializeCriticalSection(&logCriticalSection);
+	
 	if (hLoggerFile == INVALID_HANDLE_VALUE) {
 #ifdef _DEBUG
 		printf("Failed to create log file\n");
